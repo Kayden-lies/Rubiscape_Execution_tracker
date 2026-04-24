@@ -28,10 +28,20 @@ const ExecutionsPage = () => {
   const navigate = useNavigate();
   const { showToast } = useToast();
 
-  const queryParams = useMemo(
-    () => ({ ...debouncedFilters, page, page_size: pageSize }),
-    [debouncedFilters, page, pageSize],
-  );
+  const queryParams = useMemo(() => {
+  const params = {
+    page,
+    page_size: pageSize,
+  };
+
+  if (debouncedFilters.job_name) params.job_name = debouncedFilters.job_name;
+  if (debouncedFilters.status) params.status = debouncedFilters.status;
+  if (debouncedFilters.user) params.user = debouncedFilters.user;
+  if (debouncedFilters.start_date) params.date_from = debouncedFilters.start_date;
+  if (debouncedFilters.end_date) params.date_to = debouncedFilters.end_date;
+
+  return params;
+}, [debouncedFilters, page, pageSize]);
 
   const fetchExecutions = useCallback(async () => {
     setLoading(true);
